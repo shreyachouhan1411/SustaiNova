@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow"><title>Admin — SUSTAINOVA 2026</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M5 27C3 12 13 4 28 4c1 14-6 23-20 23z' fill='%232F4F3A'/%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css"><link rel="stylesheet" href="admin.css"></head>
+<body>
+<main id="login" class="lg">
+  <section class="lg-brand" aria-hidden="false">
+    <img src="../assets/spectra-logo.jpeg" alt="SPECTRA Club logo" width="84" height="84">
+    <h1>SUSTAINOVA 2026</h1><p class="lg-tag">Admin Portal</p><p class="lg-sub">Innovation for a Sustainable Future</p>
+  </section>
+  <section class="lg-form"><div class="lg-card">
+    <h2>Welcome back</h2><p class="hint">Sign in to manage registrations, payments and content.</p>
+    <form id="lf" novalidate>
+      <div class="field"><label for="le">Email Address</label><input id="le" type="email" autocomplete="username" placeholder="you@example.com"></div>
+      <div class="field"><label for="lp">Password</label><div class="pw"><input id="lp" type="password" autocomplete="current-password" placeholder="Your password"><button type="button" id="pwt" aria-label="Show password">Show</button></div></div>
+      <p id="lmsg" class="msg-t" role="alert"></p>
+      <button class="btn lg-btn" id="lbtn" type="submit">Sign in</button>
+    </form>
+    <p class="lg-note">Authorized organizers only.</p>
+  </div></section>
+</main>
+
+<div id="app" class="adm" hidden>
+  <aside class="side"><strong class="sb">SUSTAINOVA Admin</strong><nav id="nav" aria-label="Admin sections"></nav>
+    <p id="who" class="hint"></p><button class="btn btn-sm btn-ghost" data-act="logout" type="button">Sign out</button></aside>
+  <main id="view" class="adm-main" tabindex="-1"></main>
+</div>
+
+<aside id="drawer" class="drawer" hidden aria-label="Registration details"><div class="dh"><h2 id="dt">Details</h2><button class="x" data-act="closedrawer" aria-label="Close">×</button></div><div id="dbody"></div></aside>
+<dialog id="dlg"><h2 id="dlg-t"></h2><p id="dlg-p"></p><input id="dlg-i" hidden><p id="dlg-err" class="err"></p>
+  <div class="btn-row"><button class="btn" id="dlg-ok" type="button">Confirm</button><button class="btn btn-ghost" id="dlg-cancel" type="button">Cancel</button></div></dialog>
+<div id="toasts" aria-live="polite"></div>
+<script src="../config.js"></script>
+<script type="module" src="admin.js"></script>
+</body></html>

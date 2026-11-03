@@ -1,0 +1,160 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---------- helpers ----------
+    function signedIn() { return request.auth != null; }
+    // Admin = signed in with email + password AND present in the admins/{lowercase-email} allowlist.
+    // Allowlist documents are created by hand in the Firebase console only (no client write is ever allowed, see /admins below).
+    // Email verification is intentionally NOT required: the accounts are created by the owner in the console.
+    function isAdmin() {
+      return signedIn() && 'email' in request.auth.token
+        && request.auth.token.firebase.sign_in_provider == 'password'
+        && exists(/databases/$(database)/documents/admins/$(request.auth.token.email.lower()));
+    }
+    function site() { return get(/databases/$(database)/documents/settings/site).data; }
+    function regPath(id) { return /databases/$(database)/documents/registrations/$(id); }
+    function txnKey(t) { return t.upper().replace('/', '_'); }   // must match backend.js txnKey()
+
+    // Is payment required for registration (Round 1)? Missing field = NOT required (Round 1 is free by default).
+    function payReq() { return site().get('paymentRequired', false) == true; }
+    // Sanity limits for the team form (a map of text answers): required answers present, bounded size. (Rules cannot loop over every value.)
+    function formOk(f) {
+      return f is map && f.keys().size() <= 110
+        && f.keys().hasAll(['teamName', 'leaderName', 'leaderEmail', 'leaderPhone', 'domain', 'ideaTitle'])
+        && f.teamName is string && f.teamName.size() >= 1 && f.teamName.size() <= 100
+        && f.leaderName is string && f.leaderName.size() <= 100
+        && f.leaderEmail is string && f.leaderEmail.size() <= 254
+        && f.leaderPhone is string && f.leaderPhone.size() <= 20
+        && f.ideaTitle is string && f.ideaTitle.size() <= 200;
+    }
+
+    function regOpen() {
+      let s = site();
+      return s.get('registrationOpen', false) == true
+        && (s.get('registrationDeadline', null) == null || request.time < s.registrationDeadline);
+    }
+    // PPT window for a registration map r: its OWN switch (pptSubmissionOpen) and its OWN deadline,
+    // or a per-team extension. Deliberately independent of payment: no payment/status check here.
+    function pptWindow(r) {
+      let s = site();
+      let dl = s.get('pptDeadline', null);
+      let ov = r.get('pptDeadlineOverride', null);
+      return s.get('pptSubmissionOpen', false) == true
+        && ((ov != null && request.time < ov) || dl == null || request.time < dl);
+    }
+
+    // What a student (anonymous uid) may change on their OWN registration.
+    function studentUpdate() {
+      let o = resource.data;
+      let n = request.resource.data;
+      let ch = n.diff(o).affectedKeys();
+      return signedIn() && o.ownerUid == request.auth.uid
+        && ch.hasOnly(['form', 'email', 'payment', 'status', 'ppt', 'pptSubmitted', 'updatedAt'])
+        && n.updatedAt == request.time
+        && (!ch.hasAny(['form', 'email']) || (o.status == 'pending_payment' && formOk(n.form) && n.email is string && n.email.size() <= 254))
+        && (!ch.hasAny(['payment']) || o.status in ['pending_payment', 'rejected'])
+        // payment required: only pending_payment (or rejected = resubmission) -> payment_submitted, with a transaction doc owned by me
+        // payment NOT required: a team still at pending_payment/rejected (from before payment was switched off) may move to 'registered'
+        && (!ch.hasAny(['status']) || (
+              o.status in ['pending_payment', 'rejected'] && n.status == 'payment_submitted' && payReq()
+              && n.payment.txnId is string && n.payment.txnId.size() >= 6
+              // payment screenshot must be a Google Drive link (no file uploads)
+              && n.payment.screenshotLink is string && n.payment.screenshotLink.size() <= 500
+              && n.payment.screenshotLink.matches('^https://(drive|docs)[.]google[.]com/.*')
+              && getAfter(/databases/$(database)/documents/transactions/$(txnKey(n.payment.txnId))).data.ownerUid == request.auth.uid)
+            || (o.status in ['pending_payment', 'rejected'] && n.status == 'registered' && !payReq() && !ch.hasAny(['payment'])))
+        // PPT fields: only inside the PPT window, server timestamp enforced
+        && (!ch.hasAny(['ppt', 'pptSubmitted']) || (
+              pptWindow(o) && n.pptSubmitted == true && n.ppt.type == 'link'
+              && n.ppt.submittedAt == request.time
+              && n.ppt.url is string && n.ppt.url.size() <= 500
+              && n.ppt.url.matches('^https://(drive|docs)[.]google[.]com/.*')));
+    }
+
+    // ---------- registrations ----------
+    match /registrations/{regId} {
+      allow get: if isAdmin() || (signedIn() && resource.data.ownerUid == request.auth.uid);
+      allow list: if isAdmin();
+      allow create: if isAdmin() || (signedIn()
+        && regId.matches('^SUST26-[A-HJKMNP-Z2-9]{6}$') && regOpen()
+        && request.resource.data.keys().hasOnly(['form', 'email', 'ownerUid', 'status', 'pptSubmitted', 'shortlisted', 'createdAt', 'updatedAt'])
+        && request.resource.data.keys().hasAll(['form', 'email', 'ownerUid', 'status', 'pptSubmitted', 'shortlisted', 'createdAt', 'updatedAt'])
+        && request.resource.data.ownerUid == request.auth.uid
+        && formOk(request.resource.data.form) && request.resource.data.email is string && request.resource.data.email.size() <= 254
+        // payment required -> starts at pending_payment; payment switched off by the admin -> starts as 'registered'
+        && request.resource.data.status == (payReq() ? 'pending_payment' : 'registered')
+        && request.resource.data.pptSubmitted == false && request.resource.data.shortlisted == false
+        && request.resource.data.createdAt == request.time && request.resource.data.updatedAt == request.time
+        // rate limit: must be written together with this device's rateLimits doc (see below)
+        && getAfter(/databases/$(database)/documents/rateLimits/$(request.auth.uid)).data.last == request.time);
+      // Admins may shortlist only teams that have submitted a PPT and, when payment is required, are verified.
+      allow update: if (isAdmin() && (request.resource.data.get('shortlisted', false) == false
+                        || (request.resource.data.pptSubmitted == true && (!payReq() || request.resource.data.status == 'verified'))))
+                    || studentUpdate();
+      allow delete: if isAdmin();
+    }
+
+    // ---------- public-safe status mirror (no personal data) ----------
+    match /statusLookup/{id} {
+      allow get: if true;                       // unguessable ID + client-side email-hash check
+      allow list: if isAdmin();
+      allow create: if isAdmin() || (signedIn()
+        && getAfter(regPath(id)).data.ownerUid == request.auth.uid
+        && request.resource.data.keys().hasOnly(['emailHash', 'status', 'rejectReason', 'pptSubmitted', 'shortlisted'])
+        && request.resource.data.emailHash is string && request.resource.data.emailHash.size() == 64
+        && request.resource.data.status in ['pending_payment', 'registered']
+        && request.resource.data.status == getAfter(regPath(id)).data.status && request.resource.data.rejectReason == ''
+        && request.resource.data.pptSubmitted == false && request.resource.data.shortlisted == false);
+      // A student can only make the mirror match their own (rules-checked) registration.
+      allow update: if isAdmin() || (signedIn()
+        && getAfter(regPath(id)).data.ownerUid == request.auth.uid
+        && request.resource.data.keys().hasOnly(['emailHash', 'status', 'rejectReason', 'pptSubmitted', 'shortlisted'])
+        && request.resource.data.status == getAfter(regPath(id)).data.status
+        && request.resource.data.pptSubmitted == getAfter(regPath(id)).data.pptSubmitted
+        && request.resource.data.shortlisted == getAfter(regPath(id)).data.shortlisted
+        && request.resource.data.rejectReason == getAfter(regPath(id)).data.get('rejectReason', '')
+        && (request.resource.data.emailHash == resource.data.emailHash || getAfter(regPath(id)).data.status == 'pending_payment'));
+      allow delete: if isAdmin();
+    }
+
+    // ---------- unique transaction IDs ----------
+    match /transactions/{key} {
+      allow get: if signedIn();                 // lets the form warn early; docs hold no personal data
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(['ownerUid', 'regId', 'createdAt'])
+        && request.resource.data.ownerUid == request.auth.uid
+        && request.resource.data.createdAt == request.time
+        && getAfter(regPath(request.resource.data.regId)).data.ownerUid == request.auth.uid
+        && txnKey(getAfter(regPath(request.resource.data.regId)).data.payment.txnId) == key;
+      allow read, write: if isAdmin();          // students can never update or delete
+    }
+
+    // ---------- rate limit per device (anonymous uid): 1 registration / 20 s, max 8 in total ----------
+    match /rateLimits/{uid} {
+      allow get: if signedIn() && request.auth.uid == uid;
+      allow create: if signedIn() && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['last', 'count'])
+        && request.resource.data.last == request.time && request.resource.data.count == 1;
+      allow update: if signedIn() && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['last', 'count'])
+        && request.resource.data.last == request.time
+        && request.time > resource.data.last + duration.value(20, 's')
+        && request.resource.data.count == resource.data.count + 1 && request.resource.data.count <= 8;
+      allow read, write: if isAdmin();          // admins can reset a device by deleting its doc
+    }
+
+    match /settings/site { allow get: if true; allow write: if isAdmin(); }
+    // A signed-in user may read ONLY their own allowlist entry (so the admin page can check access).
+    // Nobody can list, create, edit or delete admins from the website: admins are managed in the Firebase console only.
+    match /admins/{email} {
+      allow get: if signedIn() && 'email' in request.auth.token && request.auth.token.email.lower() == email;
+      allow list, create, update, delete: if false;
+    }
+    match /auditLog/{id} {
+      allow read: if isAdmin();
+      allow create: if isAdmin() && request.resource.data.by == request.auth.token.email;   // append-only
+    }
+    // everything else: denied by default
+  }
+}

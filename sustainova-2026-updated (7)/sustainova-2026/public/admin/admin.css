@@ -1,0 +1,67 @@
+/* admin.css — extends ../styles.css (same palette) */
+.adm{display:grid;grid-template-columns:230px 1fr;min-height:100vh}
+.side{background:var(--card);border-right:1px solid var(--line);padding:20px 14px;display:flex;flex-direction:column;gap:10px;position:sticky;top:0;height:100vh;overflow:auto}
+.sb{font:600 1.1rem var(--serif);color:var(--pri)}
+#nav{display:flex;flex-direction:column;gap:2px}#nav a{padding:9px 12px;border-radius:12px;text-decoration:none;color:var(--text)}#nav a.on{background:rgba(143,169,138,.3);color:var(--pri);font-weight:600}
+.adm-main{padding:28px clamp(16px,3vw,36px);min-width:0}.adm-main h1{font-size:1.8rem}
+@media(max-width:800px){.adm{grid-template-columns:1fr}.side{position:static;height:auto;flex-direction:row;flex-wrap:wrap;align-items:center}#nav{flex-direction:row;overflow-x:auto;width:100%}#nav a{white-space:nowrap}}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:16px 0}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px}.tile b{display:block;font:600 1.9rem var(--serif);color:var(--pri)}.tile span{color:var(--mut);font-size:.88rem}
+.bar{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}.bar input,.bar select{width:auto;flex:1 1 160px}
+.tw{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:16px}
+table{border-collapse:collapse;width:100%;font-size:.92rem}th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}th{color:var(--mut);font-weight:600;white-space:nowrap}
+tr[data-act=open]{cursor:pointer}tr[data-act=open]:hover{background:rgba(143,169,138,.15)}
+.b{display:inline-block;border-radius:999px;padding:2px 10px;font-size:.8rem;font-weight:600;background:#e6ece4;color:#243d2d}
+.b.pending_payment{background:#f4ead4;color:#5a4417}.b.registered,.b.verified{background:#e3eedf;color:#1f3d29}.b.rejected{background:#f7e4e1;color:#7a2020}
+.pager{display:flex;gap:10px;align-items:center;color:var(--mut);font-size:.9rem}.pager button{all:unset;cursor:pointer;color:var(--pri);text-decoration:underline}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(560px,100%);background:var(--bg);border-left:1px solid var(--line);box-shadow:-10px 0 40px rgba(0,0,0,.12);padding:20px;overflow:auto;z-index:90}
+.dh{display:flex;justify-content:space-between;align-items:center}.x{all:unset;cursor:pointer;font-size:1.8rem;line-height:1;padding:4px 10px}
+.drawer img{max-width:100%;border-radius:12px;border:1px solid var(--line)}.drawer h3{margin-top:1.2em}
+dialog{border:1px solid var(--line);border-radius:20px;background:var(--card);max-width:440px;width:92%;padding:24px}dialog::backdrop{background:rgba(31,42,36,.4)}
+#toasts{position:fixed;bottom:16px;right:16px;display:grid;gap:8px;z-index:300}
+.toast{background:var(--pri);color:#fff;padding:10px 16px;border-radius:12px;box-shadow:var(--sh);max-width:320px}.toast.bad{background:var(--err)}
+.tog{display:flex;gap:12px;align-items:center;padding:12px 0;font-size:1.05rem}.tog input{width:26px;height:26px;min-height:0;accent-color:var(--pri)}
+.row{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px;background:#fff8}
+.row textarea{width:100%;font:inherit;padding:10px;border:1.5px solid var(--field);border-radius:12px;min-height:70px}.row .wide{grid-column:1/-1}
+.msg-t{color:var(--err);min-height:1.4em}.warnbox{background:#f4ead4;border:1px solid #e0cd9f;border-radius:12px;padding:10px 14px;margin:10px 0;color:#5a4417}
+.mini{font:inherit;font-size:.85rem;padding:4px 10px;border:1px solid var(--field);border-radius:999px;background:transparent;cursor:pointer;color:var(--pri)}
+
+/* ===== Admin UI refresh (greener, proper login, mobile-friendly) ===== */
+/* FIX: classes like .adm / .lg set "display", which overrode the hidden attribute and made the login and dashboard show together. */
+[hidden]{display:none!important}
+/* login */
+.lg{display:grid;grid-template-columns:1.05fr 1fr;min-height:100vh;min-height:100dvh}
+.lg-brand{position:relative;overflow:hidden;background:linear-gradient(160deg,#2F4F3A,#243d2d);color:#EDEFE4;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:48px 32px}
+.lg-brand::before,.lg-brand::after{content:"";position:absolute;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M8 92C4 40 40 6 94 6c2 50-34 88-86 86z' fill='rgb(143,169,138)'/%3E%3Cpath d='M10 90C36 60 60 36 88 12' stroke='rgb(47,79,58)' stroke-width='2' fill='none'/%3E%3C/svg%3E") no-repeat center/contain;opacity:.28;pointer-events:none}
+.lg-brand::before{width:340px;height:340px;right:-90px;top:-70px;transform:rotate(14deg)}.lg-brand::after{width:240px;height:240px;left:-70px;bottom:-60px;transform:rotate(-100deg);opacity:.2}
+.lg-brand>*{position:relative;z-index:1}.lg-brand img{border-radius:50%;border:3px solid rgba(255,255,255,.35);box-shadow:0 10px 30px rgba(0,0,0,.25);margin-bottom:22px}
+.lg-brand h1{color:#fff;font-size:clamp(1.9rem,4vw,2.8rem);margin-bottom:.2em}
+.lg-tag{display:inline-block;border:1px solid var(--gold);color:#F1E3C6;border-radius:999px;padding:4px 18px;margin:6px 0 14px;font-weight:500}
+.lg-sub{font:italic 500 1.15rem var(--serif);color:#DCE5D6;margin:0}
+.lg-form{display:flex;align-items:center;justify-content:center;padding:32px 20px;background:var(--bg)}
+.lg-card{width:100%;max-width:400px;background:var(--card);border:1px solid var(--line);border-radius:24px;padding:32px 28px;box-shadow:var(--sh)}
+.lg-card h2{margin-bottom:.2em}.pw{position:relative}.pw input{padding-right:70px}
+.pw button{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:0;background:transparent;color:var(--pri);font:600 .85rem var(--sans);cursor:pointer;padding:8px 10px;border-radius:8px}
+.lg-btn{width:100%;text-align:center}.lg-or{display:flex;align-items:center;gap:12px;color:var(--mut);font-size:.85rem;margin:14px 0}
+.lg-or::before,.lg-or::after{content:"";flex:1;height:1px;background:var(--line)}.lg-or span{order:2}.lg-or::after{order:3}
+.lg-note{text-align:center;color:var(--mut);font-size:.82rem;margin:18px 0 0}
+@media(max-width:800px){.lg{grid-template-columns:1fr;grid-template-rows:auto 1fr}.lg-brand{padding:30px 20px 34px}.lg-brand img{width:64px;height:64px;margin-bottom:12px}.lg-sub{font-size:1rem}
+  .lg-form{align-items:flex-start;padding:22px 16px 40px;margin-top:-18px}.lg-card{border-radius:22px;padding:26px 20px}}
+/* sidebar + dashboard */
+.side{background:linear-gradient(180deg,#2F4F3A,#243d2d);color:#EDEFE4;border:0}
+.sb{color:#fff;font-size:1.15rem;padding:6px 8px 10px;border-bottom:1px solid rgba(255,255,255,.15);margin-bottom:6px}
+#nav a{color:#DCE5D6;transition:background .2s}#nav a:hover{background:rgba(255,255,255,.1)}#nav a.on{background:var(--sage);color:#14251b;font-weight:600}
+.side .hint{color:#B9C8B4;margin-top:auto;word-break:break-all}.side .btn-ghost{color:#fff;border-color:rgba(255,255,255,.55)}.side .btn-ghost:hover{background:rgba(255,255,255,.12)}
+.adm-main{background:linear-gradient(180deg,rgba(143,169,138,.16),transparent 220px)}
+.adm-main h1{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding-bottom:10px;border-bottom:3px solid var(--sage);margin-bottom:18px}
+.tile{border-top:4px solid var(--sage);box-shadow:var(--sh)}.tile:first-child{background:var(--pri);border-color:var(--gold)}.tile:first-child b,.tile:first-child span{color:#fff}
+thead th{background:rgba(47,79,58,.09);color:var(--pri)}.tw{box-shadow:var(--sh)}
+@media(max-width:800px){
+  .side{position:sticky;top:0;z-index:40;height:auto;flex-direction:row;flex-wrap:wrap;align-items:center;gap:6px 10px;padding:10px 14px}
+  .sb{flex:1;border:0;margin:0;padding:0}#nav{order:3;width:100%;flex-direction:row;overflow-x:auto;padding-bottom:4px}#nav a{white-space:nowrap;padding:8px 14px}
+  .side .hint{display:none}.adm-main{padding:18px 14px}.adm-main h1{font-size:1.5rem}.drawer{width:100%}.bar input,.bar select{flex:1 1 100%}}
+
+/* payment-instructions textarea in Site content */
+.field textarea{width:100%;font:inherit;padding:10px 14px;border:1.5px solid var(--field);border-radius:12px;background:#fff;color:var(--text);min-height:76px;resize:vertical}
+
+.card h2+.hint{margin:0 0 14px}

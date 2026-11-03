@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Register — SUSTAINOVA 2026</title>
+<meta name="description" content="Register your team for SUSTAINOVA 2026 Ideathon: team details, payment and payment proof.">
+<meta property="og:type" content="website"><meta property="og:title" content="Register — SUSTAINOVA 2026"><meta property="og:description" content="Register your team for SUSTAINOVA 2026 Ideathon: team details, payment and payment proof."><meta property="og:site_name" content="SUSTAINOVA 2026">
+<meta name="theme-color" content="#2F4F3A">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M5 27C3 12 13 4 28 4c1 14-6 23-20 23z' fill='%232F4F3A'/%3E%3Cpath d='M6 26C12 18 17 14 24 9' stroke='%23F2F1E6' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="register"><main id="main" class="inner"><div class="wrap narrow">
+<header class="page-head"><h1>Register your team</h1><p class="lead">Fee: <b data-cfg="_fee"></b> · Team size: <b data-cfg="_team"></b></p></header>
+
+<div id="closed" class="card center" hidden><h2 id="closed-title"></h2><p id="closed-text"></p><a class="btn btn-ghost" href="index.html">Back to home</a></div>
+
+<div id="flow">
+<p id="free-note" class="msg ok" hidden>Registration is free. No payment is required.</p>
+<ol class="stepper" id="stepper" aria-label="Registration progress"><li><span>1</span>Team</li><li><span>2</span>Payment</li><li><span>3</span>Proof</li><li><span>4</span>Done</li></ol>
+<div id="resume" class="msg note" hidden>Welcome back. We saved your progress. <a href="#" id="newreg">Start a new registration</a></div>
+
+<section id="step1" class="card" aria-labelledby="t1"><h2 id="t1" tabindex="-1">Team details</h2>
+  <form id="f1" novalidate><div class="fgrid" id="team-fields"></div><div id="members"></div>
+    <p id="m1" class="msg" hidden role="alert"></p>
+    <div class="btn-row"><button class="btn" type="submit">Save &amp; Continue</button></div>
+    <p class="privacy">Your details are used only for this event.</p></form></section>
+
+<section id="step2" class="card" aria-labelledby="t2" hidden><h2 id="t2" tabindex="-1">Payment</h2>
+  <p>Registration fee: <b id="fee"></b></p><p id="fee-note" class="hint"></p><p id="pay-instr" class="msg note" hidden style="white-space:pre-line"></p>
+  <div class="big-id" id="rid2" aria-label="Your registration ID"></div>
+  <p class="hint">Keep this ID safe. You will need it to submit your PPT and check status.</p>
+  <p id="pay-note" class="msg warn" hidden>The payment link has not been added yet. Please check back soon.</p>
+  <p class="msg note">After paying, return to this page and complete Step 3.</p>
+  <div class="btn-row"><a class="btn" id="pay" target="_blank" rel="noopener noreferrer">Continue to Pay</a><button class="btn btn-ghost" id="paid" type="button">I have completed the payment</button><button class="btn btn-ghost" id="back1" type="button">Back</button></div>
+  <p class="privacy">We never ask for card numbers, UPI PINs or passwords.</p></section>
+
+<section id="step3" class="card" aria-labelledby="t3" hidden><h2 id="t3" tabindex="-1">Payment proof</h2>
+  <p id="rej" class="msg bad" hidden></p>
+  <form id="f3" novalidate><div class="fgrid" id="proof-fields"></div>
+    <p id="m3" class="msg" hidden role="alert"></p>
+    <div class="btn-row"><button class="btn" type="submit">Submit payment proof</button><button class="btn btn-ghost" id="back2" type="button">Back</button></div>
+    <p class="privacy">Your details are used only for this event.</p></form></section>
+
+<section id="step4" class="card" aria-labelledby="t4" hidden><h2 id="t4" tabindex="-1">Registration received</h2>
+  <p class="msg ok" id="verify-msg"></p>
+  <div class="big-id" id="rid4" aria-label="Your registration ID"></div>
+  <div class="id-note" role="note"><div class="id-note-txt"><b>Save your Registration ID now.</b> You will need this ID, along with your registered email, to <a href="status.html">check your status</a> and to submit your PPT. Take a screenshot or copy it somewhere safe. If you switch device or browser, you will have to enter it again.</div><button type="button" class="btn btn-sm" id="copy-id">Copy ID</button></div>
+  <dl class="sum" id="summary"></dl>
+  <div class="msg note"><b>The PPT is not part of this step.</b> You submit it separately on the <a href="submit-ppt.html">Submit PPT page</a>; it does not depend on payment. PPT deadline: <b id="ppt-dl"></b>.</div>
+  <div class="btn-row"><a class="btn" href="status.html">Check status</a><a class="btn btn-ghost" href="submit-ppt.html">Go to PPT page</a></div></section>
+</div></div></main>
+<script src="config.js"></script><script src="backend.js"></script><script src="common.js"></script><script src="register.js"></script><script>(function(){var b=document.getElementById("copy-id");if(!b)return;b.addEventListener("click",function(){var t=(document.getElementById("rid4").textContent||"").trim();if(!t)return;var done=function(){b.textContent="Copied \u2713";setTimeout(function(){b.textContent="Copy ID"},2000)};try{if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(done,function(){})}else{var r=document.createRange();r.selectNodeContents(document.getElementById("rid4"));var x=getSelection();x.removeAllRanges();x.addRange(r);document.execCommand("copy");x.removeAllRanges();done()}}catch(e){}})})();</script></body></html>

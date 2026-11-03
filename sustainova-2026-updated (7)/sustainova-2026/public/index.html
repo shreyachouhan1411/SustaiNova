@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SUSTAINOVA 2026 — Ideathon | SPECTRA Club</title>
+<meta name="description" content="SUSTAINOVA 2026: an ideathon on innovation for a sustainable future, aligned with the UN SDGs. Organized by SPECTRA Club, Acropolis Institute of Technology and Research, Indore.">
+<meta property="og:type" content="website"><meta property="og:title" content="SUSTAINOVA 2026 — Ideathon | SPECTRA Club"><meta property="og:description" content="SUSTAINOVA 2026: an ideathon on innovation for a sustainable future, aligned with the UN SDGs. Organized by SPECTRA Club, Acropolis Institute of Technology and Research, Indore."><meta property="og:site_name" content="SUSTAINOVA 2026">
+<meta name="theme-color" content="#2F4F3A">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M5 27C3 12 13 4 28 4c1 14-6 23-20 23z' fill='%232F4F3A'/%3E%3Cpath d='M6 26C12 18 17 14 24 9' stroke='%23F2F1E6' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="index"><main id="main">
+<section class="hero" id="top"><div class="wrap hero-in">
+  <img class="logo" src="assets/spectra-logo.jpeg" alt="SPECTRA Club logo" width="84" height="84">
+  <p class="badge" data-cfg="badge"></p>
+  <h1 data-cfg="eventName"></h1>
+  <p class="tag" data-cfg="tagline"></p>
+  <p class="by">Organized by <strong data-cfg="organizer"></strong><br><span data-cfg="institution"></span></p>
+  <div class="countdown" id="countdown" hidden aria-labelledby="cd-title">
+    <p class="cd-title" id="cd-title"><span class="cd-dot" aria-hidden="true"></span><span id="cd-label">Registration closes in</span></p>
+    <div class="cd-grid" id="cd-grid" aria-hidden="true">
+      <div class="cd-box"><b id="cd-d">00</b><span>Days</span></div><div class="cd-box"><b id="cd-h">00</b><span>Hours</span></div><div class="cd-box"><b id="cd-m">00</b><span>Minutes</span></div><div class="cd-box"><b id="cd-s">00</b><span>Seconds</span></div>
+    </div>
+    <p class="cd-note" id="cd-note"></p><span class="sr-only" id="cd-sr" role="status"></span>
+  </div>
+  <div class="actions"><a class="btn" href="register.html">Register Now</a><a class="btn btn-ghost" href="#domains">Explore Domains</a></div>
+  <ul class="facts" aria-label="Quick facts"><li><span>Fee</span><b data-cfg="_fee"></b></li><li><span>Team size</span><b data-cfg="_team"></b></li><li><span>Format</span><b>2 rounds</b></li><li><span>Round 1</span><b>Online</b></li></ul>
+  <div class="quick-cta" aria-label="Already registered?">
+    <p class="quick-lead">Already registered?</p>
+    <p class="quick-hint">Keep your <b>Registration ID</b> (like SUST26-XXXXXX) and registered email handy to check your status.</p>
+    <div class="quick-btns">
+      <a class="btn btn-status" href="status.html"><span class="bs-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4M8.5 11l2 2 3.5-4"/></svg></span><span class="bs-txt"><b>Check Status</b><small>Registration · PPT · Shortlisting</small></span><span class="bs-arrow" aria-hidden="true">&rarr;</span></a>
+      <a class="btn btn-ghost btn-ppt" href="submit-ppt.html">Submit PPT</a>
+    </div>
+  </div>
+</div></section>
+
+<section id="about"><div class="wrap center"><h2>About</h2><p class="lead" data-cfg="about"></p><div class="grid g3" id="highlights"></div></div></section>
+
+<section id="domains" class="alt"><div class="wrap center"><h2>Problem Domains</h2><p class="lead" data-cfg="domainsNote"></p>
+  <div class="grid g4 text-left" id="domain-grid"></div>
+  <div class="sdg-wrap"><h3>Aligned with the 17 UN Sustainable Development Goals</h3><ul class="sdgs" id="sdgs" aria-label="The 17 Sustainable Development Goals"></ul></div>
+</div></section>
+
+<section id="format"><div class="wrap center"><h2>Event Format</h2><p class="lead">Two rounds. One online, one on campus.</p><div class="rounds" id="rounds"></div></div></section>
+
+<section id="how" class="alt"><div class="wrap center"><h2>How It Works</h2><p class="lead" id="steps-lead">Simple steps from idea to final.</p>
+  <ol class="steps" id="steps"></ol>
+  <div class="panel"><span>Fee: <b data-cfg="_fee"></b></span><span>Team size: <b data-cfg="_team"></b></span><a class="btn btn-sm" href="register.html">Register</a></div>
+</div></section>
+
+<section id="prizes"><div class="wrap center"><h2>Prizes</h2><div class="grid g3 prizes" id="prize-grid"></div><p class="note-s" data-cfg="prizeNote"></p></div></section>
+
+<section id="timeline" class="alt"><div class="wrap center"><h2>Timeline</h2><p class="lead">Key dates for your calendar.</p><ol class="timeline" id="timeline-list"></ol></div></section>
+
+<section id="outcome" class="outcome"><div class="wrap center"><h2>Expected Outcome</h2><p data-cfg="expectedOutcome"></p></div></section>
+
+<section id="faq" class="alt"><div class="wrap center"><h2>FAQ</h2><div class="faq" id="faq-list"></div></div></section>
+
+<section id="contact"><div class="wrap center"><h2>Contact</h2><p class="lead">Questions? Reach out to the coordinators.</p>
+  <div class="grid g3 contact-grid" id="contacts"></div></div></section>
+</main>
+<script src="config.js"></script><script src="backend.js"></script><script src="common.js"></script><script src="index.js"></script></body></html>

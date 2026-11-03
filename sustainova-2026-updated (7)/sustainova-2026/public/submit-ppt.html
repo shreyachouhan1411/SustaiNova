@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Submit PPT — SUSTAINOVA 2026</title>
+<meta name="description" content="Submit your presentation for SUSTAINOVA 2026 Ideathon before the PPT deadline.">
+<meta property="og:type" content="website"><meta property="og:title" content="Submit PPT — SUSTAINOVA 2026"><meta property="og:description" content="Submit your presentation for SUSTAINOVA 2026 Ideathon before the PPT deadline."><meta property="og:site_name" content="SUSTAINOVA 2026">
+<meta name="theme-color" content="#2F4F3A">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M5 27C3 12 13 4 28 4c1 14-6 23-20 23z' fill='%232F4F3A'/%3E%3Cpath d='M6 26C12 18 17 14 24 9' stroke='%23F2F1E6' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="ppt"><main id="main" class="inner"><div class="wrap narrow">
+<header class="page-head"><h1>Submit your PPT</h1><p class="lead">Deadline: <b id="dl"></b></p><p class="count" id="count" aria-live="off"></p></header>
+<p id="state" class="msg" hidden role="status"></p>
+
+<section id="lookup" class="card" aria-labelledby="l1"><h2 id="l1">Find your registration</h2>
+  <form id="fl" novalidate><div class="fgrid" id="lookup-fields"></div><p id="ml" class="msg" hidden role="alert"></p>
+  <div class="btn-row"><button class="btn" type="submit">Continue</button></div><p class="privacy">Your details are used only for this event.</p></form></section>
+
+<section id="gate" class="card" hidden><h2 id="gate-t">Not available yet</h2><p id="gate-p"></p><a class="btn btn-ghost" id="gate-a" href="status.html">Check status</a></section>
+
+<section id="upload" class="card" aria-labelledby="u1" hidden><h2 id="u1">Submit your PPT link</h2>
+  <p id="current" class="msg ok" hidden></p>
+  <form id="fu" novalidate><div id="up-fields"></div><p id="mu" class="msg" hidden role="alert"></p>
+  <div class="btn-row"><button class="btn" type="submit" id="sub">Submit PPT</button></div>
+  <p class="hint">You can replace your submission any time before the deadline.</p></form></section>
+</div></main>
+<script src="config.js"></script><script src="backend.js"></script><script src="common.js"></script><script src="ppt.js"></script></body></html>
